@@ -5,12 +5,6 @@ import huggingface_hub
 
 MODEL_DIR = "/model"
 
-# ### Image definition
-# We’ll start from a Dockerhub image recommended by `vLLM`, upgrade the older
-# version of `torch` to a new one specifically built for CUDA 11.8. Next, we install `vLLM` from source to get the latest updates.
-# Finally, we’ll use run_function to run the function defined above to ensure the weights of the model
-# are saved within the container image.
-#
 
 def download_model_to_folder():
     from huggingface_hub import snapshot_download
@@ -88,13 +82,19 @@ class Model:
 # ## Run the model
 # We define a [`local_entrypoint`](/docs/guide/apps#entrypoints-for-ephemeral-apps) to call our remote function
 # sequentially for a list of inputs. You can run this locally with `modal run vllm_inference.py`.
+
 @stub.local_entrypoint()
 def main():
     model = Model()
-    questions = [
-        # Coding questions
-        "Implement a Python function to compute the Fibonacci numbers.",
-    ]
-    res = model.generate.remote(questions)
+    user_input = ''
+    general_prompt = "From this list, rank them according to most important to least important for a patient: {}" \
+    "Price Per Month, Metal Tier (Bronze, Silver, Gold, Platinum), Overall Quality Rating, Maximum Out-of-Pocket Expense," \
+    " Out-of-Network Coverage, Health Savings Account (HSA) Eligibility, Persons Covered (Individual, Family, Group), Deductible Amount," \
+    "Co-payments for Services, Prescription Drug Coverage, Emergency Services Coverage, Network of Doctors/Hospitals," \
+    "Preventive Services, Mental Health Services, Maternity and Newborn Care, Duration of Coverage, Waiting Period, " \
+    "Exclusions and Limitations, Renewability, Telehealth Options, Customer Service Quality, Additional Benefits (e.g., Dental, Vision)," \
+    "Claim Settlement Ratio, Portability Options, Policy Cancellation Terms"
+
+    res = model.generate.remote([general_prompt.replace('{}', user_input)])
 
     print(res)
