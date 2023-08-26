@@ -40,11 +40,6 @@ for document in results:
     print(document['context'])
 
 
-#Writing
-
-
-
-
 chunks_doc = chunks_collection.find({})
 
 for doc in chunks_doc:

@@ -20,21 +20,25 @@ api_key = ''
 co = cohere.Client(api_key)
 
 
+def get_result(query):
 #Query
-query = "I am 29 years old patient concenr about insurance because I do a lot of sport"
-query_embedding = co.embed(texts=[query], model='small').embeddings[0]
+    #query = "I am 29 years old patient concenr about insurance because I do a lot of sport"
+    query_embedding = co.embed(texts=[query], model='small').embeddings[0]
 
-results = chunks_collection.aggregate([
-    {
-        '$search': {
-            "index": "ChunksSemanticSearch",
-            "knnBeta": {
-                "vector": query_embedding,
-                "k": 4,
-                "path": "embedding"}
+    results = chunks_collection.aggregate([
+        {
+            '$search': {
+                "index": "ChunksSemanticSearch",
+                "knnBeta": {
+                    "vector": query_embedding,
+                    "k": 3,
+                    "path": "embedding"}
+            }
         }
-    }
-])
+    ])
 
-for document in results:
-    print(document['Context'])
+    res = []
+    for document in results:
+        res.append(document)
+
+    return res
