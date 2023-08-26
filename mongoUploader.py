@@ -3,6 +3,7 @@ from pymongo.server_api import ServerApi
 import cohere
 from postProcess import get_file_content
 from pathlib import Path
+import time
 
 uri = ""
 # Create a new client and connect to the server
@@ -29,12 +30,12 @@ def upload_file(filename):
 
     chunks_collection.insert_many(contents)
 
-    chunks_doc = chunks_collection.find({})
+    chunks_doc = chunks_collection.find({"Filename": filename})
 
-    # for doc in chunks_doc:
-    #     context = doc['Context']
-    #     doc['embedding'] = co.embed(texts=[context], model='small').embeddings[0]
-    #     chunks_collection.replace_one({'_id': doc['_id']}, doc)
+    for doc in chunks_doc:
+        context = doc['Context']
+        doc['embedding'] = co.embed(texts=[context], model='small').embeddings[0]
+        chunks_collection.replace_one({'_id': doc['_id']}, doc)
 
 
 folder_path = Path('/Users/angky/Cornell/Hackathon/insurance_plans')
@@ -46,6 +47,8 @@ for file_path in folder_path.iterdir():
         filename = foldername + '/' +  str(file_path.name)
         print("Processing " + filename)
         upload_file(filename)
+        time.sleep(30)
+
 
 
 
