@@ -2,7 +2,6 @@ import streamlit as st
 import openai
 from llmQuery import get_llm_result  # Import the mongoQuery function
 
-
 def set_custom_css():
     st.markdown(
         """
@@ -68,7 +67,7 @@ def main():
         if len(st.session_state.messages) == 0:
             mongo_response = get_llm_result(user_input)
             print('Were here')
-            st.session_state.messages.append({"role": "assistant", "content": str(mongo_response)})
+            st.session_state.messages.append({"role": "assistant", "content": mongo_response})
         else:
             process_with_gpt(user_input)
 
