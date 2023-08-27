@@ -1,6 +1,4 @@
 openai
 pymongo
 cohere
-claude_api
-mongoQuery
 anthropic
