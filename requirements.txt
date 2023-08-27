@@ -2,3 +2,4 @@ openai
 pymongo
 cohere
 anthropic
+claude_api
