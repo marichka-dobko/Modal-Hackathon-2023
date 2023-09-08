@@ -6,7 +6,7 @@ import tqdm
 import anthropic
 from PyPDF2 import PdfReader
 
-claude_key = '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'
+claude_key = ''
 client = anthropic.Client(claude_key)
 
 sections = [
